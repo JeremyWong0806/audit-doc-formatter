@@ -1,0 +1,14 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--color-bg);
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: var(--space-md);
+  gap: var(--space-md);
+}

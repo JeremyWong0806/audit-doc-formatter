@@ -1,0 +1,28 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 var(--space-md);
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+}
+
+.toolbar-group {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 30px;
+  background: var(--color-border);
+  margin: 0 var(--space-md);
+}
+
+.toolbar-title {
+  margin-left: auto;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
