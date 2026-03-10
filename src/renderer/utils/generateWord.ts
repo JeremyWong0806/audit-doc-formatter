@@ -167,13 +167,21 @@ const createParagraph = (
 
 // 创建表格
 const createTable = (rows: string[][], config: FormatConfig): Table => {
+  if (!rows || rows.length === 0) {
+    // 返回空表格
+    return new Table({
+      rows: [],
+      width: { size: 100, type: WidthType.PERCENTAGE }
+    })
+  }
+
   const tableRows = rows.map(row =>
     new TableRow({
       children: row.map(cell =>
         new TableCell({
           children: [new Paragraph({
             children: [new TextRun({
-              text: cell,
+              text: cell || '',
               font: config.body.fontFamily,
               size: config.body.fontSize * 2
             })],
@@ -195,43 +203,64 @@ export const generateWordDocument = async (
   content: string,
   config: FormatConfig
 ): Promise<ArrayBuffer> => {
-  const blocks = parseToBlocks(content)
-  const children: (Paragraph | Table)[] = []
+  try {
+    // 解析内容
+    const blocks = parseToBlocks(content)
+    const children: (Paragraph | Table)[] = []
 
-  for (const block of blocks) {
-    if (block.type === 'table' && block.rows) {
-      children.push(createTable(block.rows, config))
-    } else if (block.type !== 'empty' && block.type !== 'table') {
-      children.push(createParagraph(block.content, config, block.type))
-    }
-  }
-
-  const doc = new Document({
-    sections: [{
-      properties: {
-        page: {
-          size: {
-            width: 11906,
-            height: 16838
-          },
-          margin: {
-            top: 1440,
-            right: 1440,
-            bottom: 1440,
-            left: 1440
-          }
+    // 如果内容为空，添加一个空段落
+    if (!content || content.trim() === '') {
+      children.push(new Paragraph({
+        children: [new TextRun({ text: '' })],
+        spacing: { before: 0, after: 0 }
+      }))
+    } else {
+      for (const block of blocks) {
+        if (block.type === 'table' && block.rows) {
+          children.push(createTable(block.rows, config))
+        } else if (block.type !== 'empty' && block.type !== 'table') {
+          children.push(createParagraph(block.content, config, block.type))
         }
-      },
-      children
-    }]
-  })
+      }
+    }
 
-  const buffer = await Packer.toBuffer(doc)
-  // 将Buffer转换为ArrayBuffer
-  const arrayBuffer = new ArrayBuffer(buffer.length)
-  const view = new Uint8Array(arrayBuffer)
-  for (let i = 0; i < buffer.length; i++) {
-    view[i] = buffer[i]
+    const doc = new Document({
+      sections: [{
+        properties: {
+          page: {
+            size: {
+              width: 11906,
+              height: 16838
+            },
+            margin: {
+              top: 1440,
+              right: 1440,
+              bottom: 1440,
+              left: 1440
+            }
+          }
+        },
+        children
+      }]
+    })
+
+    // 生成Buffer
+    const buffer = await Packer.toBuffer(doc)
+
+    // 确保返回有效的ArrayBuffer
+    if (buffer instanceof ArrayBuffer) {
+      return buffer
+    }
+
+    // 如果是Buffer，转换为ArrayBuffer
+    const arrayBuffer = new ArrayBuffer(buffer.length)
+    const view = new Uint8Array(arrayBuffer)
+    for (let i = 0; i < buffer.length; i++) {
+      view[i] = buffer[i]
+    }
+    return arrayBuffer
+  } catch (error) {
+    console.error('生成Word文档失败:', error)
+    throw error
   }
-  return arrayBuffer
 }

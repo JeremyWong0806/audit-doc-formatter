@@ -7,16 +7,8 @@ files:
   - dist/**/*
   - dist-electron/**/*
   - package.json
-mac:
-  category: public.app-category.productivity
-  target:
-    - dmg
-    - zip
-  icon: resources/icon.icns
 win:
   target:
-    - nsis
-  icon: resources/icon.ico
-nsis:
-  oneClick: false
-  allowToChangeInstallationDirectory: true
+    - target: dir
+      arch:
+        - x64
