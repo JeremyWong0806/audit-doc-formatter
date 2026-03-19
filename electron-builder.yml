@@ -12,3 +12,4 @@ win:
     - target: dir
       arch:
         - x64
+electronDist: /tmp/electron-win-x64
