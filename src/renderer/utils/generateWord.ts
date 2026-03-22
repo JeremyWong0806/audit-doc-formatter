@@ -260,7 +260,8 @@ export const generateWordDocument = async (
     }
     return arrayBuffer
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
     console.error('生成Word文档失败:', error)
-    throw error
+    throw new Error('生成Word文档失败: ' + errorMessage)
   }
 }

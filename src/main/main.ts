@@ -84,6 +84,8 @@ ipcMain.handle('load-config', async () => {
 // 保存Word文件
 ipcMain.handle('save-word', async (_event, arrayBuffer: ArrayBuffer) => {
   try {
+    log.info('Received save-word request, arrayBuffer byteLength:', arrayBuffer.byteLength)
+
     const result = await dialog.showSaveDialog(mainWindow!, {
       title: '导出Word文档',
       defaultPath: '审计报告.docx',
@@ -91,11 +93,14 @@ ipcMain.handle('save-word', async (_event, arrayBuffer: ArrayBuffer) => {
     })
 
     if (!result.canceled && result.filePath) {
-      const buffer = Buffer.from(arrayBuffer)
+      // 创建一个新数组来确保我们可以读取它
+      const uint8Array = new Uint8Array(arrayBuffer)
+      const buffer = Buffer.from(uint8Array)
       fs.writeFileSync(result.filePath, buffer)
+      log.info('Word file saved successfully:', result.filePath)
       return { success: true, path: result.filePath }
     }
-    return { success: false }
+    return { success: false, error: '用户取消保存' }
   } catch (error) {
     log.error('Save word error:', error)
     return { success: false, error: String(error) }

@@ -77,16 +77,20 @@ const App: React.FC = () => {
     }
 
     setIsExporting(true)
+    setStatusMessage('正在生成Word文档...')
     try {
       const arrayBuffer = await generateWordDocument(content, config)
+      setStatusMessage('正在保存文件...')
       const result = await window.electronAPI.saveWord(arrayBuffer)
       if (result.success) {
-        setStatusMessage('Word文档已导出')
+        setStatusMessage('Word文档已导出: ' + result.path)
       } else {
-        setStatusMessage('导出取消')
+        setStatusMessage(result.error || '导出取消')
       }
     } catch (error) {
-      setStatusMessage('导出失败')
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      setStatusMessage('导出失败: ' + errorMessage)
+      console.error('导出Word失败:', error)
     } finally {
       setIsExporting(false)
     }
