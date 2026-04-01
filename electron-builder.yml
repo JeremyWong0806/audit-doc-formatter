@@ -1,0 +1,15 @@
+appId: com.audit.docformatter
+productName: AuditDocFormatter
+directories:
+  output: release
+  buildResources: resources
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+win:
+  target:
+    - target: dir
+      arch:
+        - x64
+electronDist: /tmp/electron-win-x64

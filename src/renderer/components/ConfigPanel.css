@@ -1,0 +1,111 @@
+.config-panel {
+  width: 280px;
+  min-width: 280px;
+  background: var(--color-panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  overflow-y: auto;
+  padding: var(--space-md);
+}
+
+.config-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.config-item {
+  margin-bottom: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.config-item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg);
+  cursor: pointer;
+  font-weight: 500;
+  user-select: none;
+}
+
+.config-item-header:hover {
+  background: #e8edf1;
+}
+
+.config-arrow {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  transition: transform var(--transition);
+}
+
+.config-arrow.open {
+  transform: rotate(90deg);
+}
+
+.config-item-content {
+  padding: var(--space-md);
+  background: var(--color-panel);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.style-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.style-input label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.style-input input,
+.style-input select {
+  height: 32px;
+  padding: 0 var(--space-sm);
+  font-size: 13px;
+}
+
+.style-input select {
+  cursor: pointer;
+}
+
+.config-help {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-bg);
+  border-radius: var(--radius);
+}
+
+.config-help h4 {
+  font-size: 13px;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.config-help ul {
+  list-style: none;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.config-help li {
+  padding: var(--space-xs) 0;
+}
+
+.config-help code {
+  font-family: var(--font-code);
+  background: var(--color-panel);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--color-secondary);
+}
