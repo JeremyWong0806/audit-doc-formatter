@@ -41,7 +41,7 @@ export const parseToBlocks = (content: string): ParsedBlock[] => {
     } else if (trimmed === '') {
       blocks.push({ type: 'empty', content: '' })
     } else {
-      // 检查是否有强调文字
+      // 检查是否有强调内容
       const hasEmphasis = /\[([^\]]+)\]/.test(trimmed)
       blocks.push({ type: hasEmphasis ? 'emphasis' : 'body', content: trimmed })
     }
@@ -58,13 +58,13 @@ const createParagraph = (
 ): Paragraph => {
   const runs: TextRun[] = []
 
-  // 处理强调文字 [文字]
+  // 处理强调内容 [内容]
   const emphasisRegex = /\[([^\]]+)\]/g
   let lastIndex = 0
   let match
 
   while ((match = emphasisRegex.exec(text)) !== null) {
-    // 添加普通文字
+    // 添加普通内容
     if (match.index > lastIndex) {
       runs.push(new TextRun({
         text: text.slice(lastIndex, match.index),
@@ -73,7 +73,7 @@ const createParagraph = (
       }))
     }
 
-    // 添加强调文字
+    // 添加强调内容
     runs.push(new TextRun({
       text: match[1],
       font: config.emphasis.fontFamily,
@@ -86,7 +86,7 @@ const createParagraph = (
     lastIndex = match.index + match[0].length
   }
 
-  // 添加剩余文字
+  // 添加剩余内容
   if (lastIndex < text.length) {
     runs.push(new TextRun({
       text: text.slice(lastIndex),
@@ -103,7 +103,7 @@ const createParagraph = (
     }))
   }
 
-  // 处理不同类型的段落
+  // 创建不同类型的段落
   if (blockType === 'title1') {
     return new Paragraph({
       children: [new TextRun({
@@ -244,14 +244,11 @@ export const generateWordDocument = async (
       }]
     })
 
-    // 生成Buffer (docx库返回Uint8Array)
-    const buffer = await Packer.toBuffer(doc)
+    // 使用 Blob 方式（浏览器兼容）
+    const blob = await Packer.toBlob(doc)
 
-    // Uint8Array的buffer属性就是ArrayBuffer
-    // 但为了避免潜在的偏移问题，创建一个新的ArrayBuffer
-    const arrayBuffer = new ArrayBuffer(buffer.length)
-    new Uint8Array(arrayBuffer).set(buffer)
-    return arrayBuffer
+    // 将 Blob 转换为 ArrayBuffer
+    return await blob.arrayBuffer()
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
     console.error('生成Word文档失败:', error)
